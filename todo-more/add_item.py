@@ -1,3 +1,5 @@
+import TodoFile
+
 new_input = input('''The format for adding an item:
     Rating: integer
     Date added: [yyyy-mm-dd]
@@ -14,3 +16,4 @@ new_input = input('''The format for adding an item:
     ''')
 
 print(new_input)
+a_file = TodoFile.TodoFile()
