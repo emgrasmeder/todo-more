@@ -1,4 +1,6 @@
-I want an executable file that I can very simply add a new line to a file I already have existing. It should do the "sort" functions automatically for me, so that I can either VIEW or ADD to it, and it will show me the stuff I want.
+I want an executable file that I can very simply add a new line to a to do list. It should do the "sort" functions automatically for me, so that I can either VIEW or ADD to it, and it will show me the stuff I want.
+
+This code isn't functional code, so enter at your own risk. 
 
 Example:
 ADD: then provide (as prompted) date, priority, project, etc
