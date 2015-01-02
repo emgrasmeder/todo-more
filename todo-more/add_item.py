@@ -16,4 +16,5 @@ new_input = input('''The format for adding an item:
     ''')
 
 print(new_input)
-a_file = TodoFile.TodoFile()
+a_file = TodoFile.TodoFile()#debug=True)
+print(a_file.find_line())
