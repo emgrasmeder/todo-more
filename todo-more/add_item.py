@@ -1,8 +1,9 @@
 import TodoFile
 
-new_input = input("The format for adding an item:\
+def new_entry():
+    return(input("The format for adding an item:\
     Rating: integer\
-    Date added: [yyyy-mm-dd]\
+    Lifespan: [yyyy-mm-dd]\
     Category: string\
     Description: string\
     Extra information: string\
@@ -11,8 +12,4 @@ new_input = input("The format for adding an item:\
     Shortcuts: -r, -d, -c, -d, -e, -s\
     Default input order: Category, Description, Importance\
     Override defaults with shortcuts.\
-    Enter task:")
-
-#print(new_input)
-a_file = TodoFile.TodoFile()#debug=True)
-print(a_file.find_line())
+    Enter task:"))

@@ -14,39 +14,73 @@ class TodoFile():
             filename = "sorted_ideas.csv"
             path = "/home/emma/Dropbox/"
             self.debug=debug
+            self.headers = ["ID",
+                            "Importance",
+                            "StartDate",
+                            "Category",
+                            "Description",
+                            "ExtraInformation",
+                            "Solution",
+                            "CompletionDate"]
+
             self.fullpath = os.path.join(path, filename)
             with open(self.fullpath) as f:
                 self.todo_file = [line.split('\t') for line in f]
                 if self.debug:
                     return(self.todo_file)
-            self.date_index, self.index_index = self.get_base_indices()
+            self.start_date_index= self.get_header_index("StartDate")
+            self.index_index = self.get_header_index("ID")
         else:
             raise Exception("TodoFile can't handle any arguments yet.")
 
-    def get_base_indices(self):
+    def get_header_index(self,header):
 
-        return self.todo_file[0].index("Date Added"),\
-                                    self.todo_file[0].index("ID")
+        index = [index 
+                    for index,item in enumerate(self.headers) 
+                        if header == item]
+        print("index: ",index[0])
+        return(index[0])
 
 
-    def find_line(self, specific=False,headers=True, **kwargs):
+    def get_next_empty_row(self,
+                    specific_row=False,
+                    headers=True,
+                    **kwargs):
         '''
             I'm not sure if this is the optimal way to write the algorithm,
             but this method will by default find the next line, otherwise 
             find the line you ask it to, by the index. 
         '''
-        if specific:
+        if specific_row:
             pass
         else:
             if headers:
                 cleaned_file =\
                     (list(filter(lambda line: 
-                        line[self.date_index]!="",self.todo_file)))
-                return(max(
+                        line[self.start_date_index]!="",self.todo_file)))
+                return(int(max(
                     list(
                         map(lambda row: row[0], cleaned_file[1:])
-                            )))
+                            )))+1)
+            else:
+                #self.prepend_headers()
+                pass
 
+    def new_entry(self):
+        empty_row_index = self.get_next_empty_row()
+        def get_input():
+            import add_item
+            new_entry = add_item.new_entry()
+            print(new_entry)
+
+        def parse_input():
+            pass
+        def insert_input():
+            pass
+
+        get_input()
+        parse_input()
+        insert_input()
 
 
     def sort():
