@@ -4,7 +4,7 @@ import os
 class TodoFile():
     '''
         Opens, reads in, appends to, and generally manages
-        communication between todo-more logic and the todo-file.
+        communication between todo-more logic and the todo file.
 
         An instance of TodoFile is created when user runs the 
         Python file. 
@@ -15,18 +15,21 @@ class TodoFile():
             path = "/home/emma/Dropbox/"
             self.debug=debug
             self.fullpath = os.path.join(path, filename)
-            self.split_file()
+            with open(self.fullpath) as f:
+                self.todo_file = [line.split('\t') for line in f]
+                if self.debug:
+                    return(self.todo_file)
+            self.date_index, self.index_index = self.get_base_indices()
         else:
             raise Exception("TodoFile can't handle any arguments yet.")
 
-    def split_file(self):
-        with open(self.fullpath) as f:
-            the_split_file = [line.split('\t') for line in f]
-            if self.debug:
-                print(the_split_file)
-            return the_split_file
+    def get_base_indices(self):
 
-    def find_line(self, specific=False, **kwargs):
+        return self.todo_file[0].index("Date Added"),\
+                                    self.todo_file[0].index("ID")
+
+
+    def find_line(self, specific=False,headers=True, **kwargs):
         '''
             I'm not sure if this is the optimal way to write the algorithm,
             but this method will by default find the next line, otherwise 
@@ -34,12 +37,16 @@ class TodoFile():
         '''
         if specific:
             pass
-        else:   #Find the next empty line
-            for line in self.split_file():
-                if line[0]:
-                    max_index = line[0]
-                    print(max_index)
-        return max_index
+        else:
+            if headers:
+                cleaned_file =\
+                    (list(filter(lambda line: 
+                        line[self.date_index]!="",self.todo_file)))
+                return(max(
+                    list(
+                        map(lambda row: row[0], cleaned_file[1:])
+                            )))
+
 
 
     def sort():
