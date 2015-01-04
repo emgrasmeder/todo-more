@@ -1,5 +1,7 @@
 #run.py
 import TodoFile
 f = TodoFile.TodoFile()
-f.new_entry()
-#f.get_header_index()
+if input("Enter Mode: ") != "run":
+    f.get_record(record_id="max")
+else:
+    f.new_entry()

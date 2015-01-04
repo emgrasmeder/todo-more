@@ -14,6 +14,7 @@ class TodoFile():
             filename = "sorted_ideas.csv"
             path = "/home/emma/Dropbox/"
             self.debug=debug
+            self.cleaned_file = False
             self.headers = ["ID",
                             "Importance",
                             "StartDate",
@@ -26,8 +27,7 @@ class TodoFile():
             self.fullpath = os.path.join(path, filename)
             with open(self.fullpath) as f:
                 self.todo_file = [line.split('\t') for line in f]
-                if self.debug:
-                    return(self.todo_file)
+            
             self.start_date_index= self.get_header_index(header="StartDate")
             self.index_index = self.get_header_index(header="ID")
         else:
@@ -38,36 +38,42 @@ class TodoFile():
             index = [index 
                         for index,item in enumerate(self.headers) 
                             if header == item]
-            print("index: ",index[0])
             return(index[0])
-
-
-    def get_next_empty_row(self,
-                    specific_row=False,
-                    headers=True,
-                    **kwargs):
-        '''
-            I'm not sure if this is the optimal way to write the algorithm,
-            but this method will by default find the next line, otherwise 
-            find the line you ask it to, by the index. 
-        '''
-        if specific_row:
-            pass
         else:
-            if headers:
-                self.cleaned_file =\
-                    (list(filter(lambda line: 
-                        line[self.start_date_index]!="",self.todo_file)))
-                return(int(max(
-                    list(
-                        map(lambda row: int(row[0]), self.cleaned_file[1:])
-                            )))+1)
-            else:
-                #self.prepend_headers()
-                pass
+            raise InputError("get_header_index requires a header to find")
 
+    def get_record(self, record_id=False):
+        if record_id != "max":
+            record = list(filter(
+                        lambda record: 
+                            int(record[self.get_header_index(header="ID")]
+                                )==record_id, self.cleaned_file))
+            print(record)
+        else: #if record_id = "max"
+            if not self.cleaned_file:
+                self.cleaned_file = self.clean_file()
+                max_record_id = list(map(lambda record: 
+                    int(record[self.get_header_index(header="ID")]),
+                        self.cleaned_file))
+                return(int(max(max_record_id)))
+     
+    def clean_file(self, headers=True):
+        '''
+            Cleaned File is the input file without headers, training newlines
+            or blank entries (based on input date, which should always exist)
+        '''
+        if headers:
+            return(list(filter(lambda record: 
+                        record[self.get_header_index(header="StartDate")]!="",
+                            self.todo_file[1:])))
+        else:
+            return(list(filter(lambda record: 
+                        record[self.get_header_index(header="StartDate")]!="",
+                            self.todo_file)))
     def new_entry(self):
-        empty_row_index = self.get_next_empty_row()
+        empty_row_index = self.get_record(record_id="max")+1
+        print("empty row index = ",empty_row_index)
+        input()
         def get_input():
             print('''
             The format for adding an item:
