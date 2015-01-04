@@ -60,7 +60,7 @@ class TodoFile():
                         line[self.start_date_index]!="",self.todo_file)))
                 return(int(max(
                     list(
-                        map(lambda row: row[0], self.cleaned_file[1:])
+                        map(lambda row: int(row[0]), self.cleaned_file[1:])
                             )))+1)
             else:
                 #self.prepend_headers()
