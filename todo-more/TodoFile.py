@@ -28,18 +28,18 @@ class TodoFile():
                 self.todo_file = [line.split('\t') for line in f]
                 if self.debug:
                     return(self.todo_file)
-            self.start_date_index= self.get_header_index("StartDate")
-            self.index_index = self.get_header_index("ID")
+            self.start_date_index= self.get_header_index(header="StartDate")
+            self.index_index = self.get_header_index(header="ID")
         else:
             raise Exception("TodoFile can't handle any arguments yet.")
 
-    def get_header_index(self,header):
-
-        index = [index 
-                    for index,item in enumerate(self.headers) 
-                        if header == item]
-        print("index: ",index[0])
-        return(index[0])
+    def get_header_index(self,header=False):
+        if header:
+            index = [index 
+                        for index,item in enumerate(self.headers) 
+                            if header == item]
+            print("index: ",index[0])
+            return(index[0])
 
 
     def get_next_empty_row(self,
@@ -55,12 +55,12 @@ class TodoFile():
             pass
         else:
             if headers:
-                cleaned_file =\
+                self.cleaned_file =\
                     (list(filter(lambda line: 
                         line[self.start_date_index]!="",self.todo_file)))
                 return(int(max(
                     list(
-                        map(lambda row: row[0], cleaned_file[1:])
+                        map(lambda row: row[0], self.cleaned_file[1:])
                             )))+1)
             else:
                 #self.prepend_headers()
@@ -69,18 +69,42 @@ class TodoFile():
     def new_entry(self):
         empty_row_index = self.get_next_empty_row()
         def get_input():
-            import add_item
-            new_entry = add_item.new_entry()
-            print(new_entry)
+            print('''
+            The format for adding an item:
+                Importance: integer
+                StartDate: [yyyy-mm-dd]
+                Category: string
+                Description: string
+                Extra information: string
+                Solution: string (hardcoded x)
+                Completion Date
+                ******
+                Shortcuts: -r, -d, -c, -d, -e, -s
+                Default input order: Description, Category, Importance
+                Override defaults with shortcuts.''')
 
-        def parse_input():
-            pass
-        def insert_input():
-            pass
+            description = input('Task Description: ')
+            category = input('Category: ')
+            importance = input('Importance: ')
+            extra_info = input('Extra Information: ')
+            return(description, category, importance, extra_info)
+        def insert_input(description, category, importance, extra_info):
+            f_new = open(self.fullpath, 'w')
+            for line in self.cleaned_file:
+                f_new.write("\t".join(line))
+            f_new.write("\t".join(["\n"+str(empty_row_index),
+                                    importance,
+                                    datetime.datetime.now().isoformat()[:10],
+                                    category,
+                                    description,
+                                    extra_info,
+                                    "x",
+                                    "x"]))
 
-        get_input()
-        parse_input()
-        insert_input()
+            
+
+        description, category, importance, extra_info = get_input()
+        insert_input(description, category, importance, extra_info)
 
 
     def sort():
