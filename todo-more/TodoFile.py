@@ -60,11 +60,10 @@ class TodoFile():
             return(list(filter(lambda record: 
                         record[self.get_header_index("StartDate")]!="",
                             self.todo_file)))
-    def new_entry(self):
-        empty_row_index = self.get_record(record_id="max")+1
-        def get_input():
+    
+    def get_input(self):
             print('''
-            The format for adding an item:
+            The [eventual] format for adding an item:
                 Importance: integer
                 StartDate: [yyyy-mm-dd]
                 Category: string
@@ -76,9 +75,19 @@ class TodoFile():
                 Shortcuts: -r, -d, -c, -d, -e, -s
                 Default input order: Description, Category, Importance
                 Override defaults with shortcuts.''')
+            category = input("Category: ")
+            description = input("Description: ")
+            importance = input("Importance: ")
+            extra_info = input("Extra info: ")
 
             return(description, category, importance, extra_info)
-        description, category, importance, extra_info = get_input()
+
+
+    def new_entry(self):
+        '''
+            Creates a new row entry based on user input.
+        '''
+        description, category, importance, extra_info = self.get_input()
         self.insert_input(new_entry=True,
                             description=description,
                             category=category,
@@ -93,14 +102,16 @@ class TodoFile():
                 line[-1]+="\n"
             f_new.write("\t".join(line))
         if kwargs:
-            f_new.write("\t".join(["\n"+str(empty_row_index),
-                                    kwargs["importance"],
-                                    self.current_date,
-                                    kwargs["category"],
-                                    kwargs["description"],
-                                    kwargs["extra_info"],
-                                    "x",
-                                    "x"]))
+            f_new.write("\t".join(
+                [str(self.get_record(record_id="max")+1),
+                kwargs["importance"],
+                self.current_date(),
+                kwargs["category"],
+                kwargs["description"],
+                kwargs["extra_info"],
+                "x",
+                "x"
+                ]))
 
 
     def current_date(self):
@@ -109,7 +120,7 @@ class TodoFile():
     def get_record(self, record_id=False):
         if not self.cleaned_file:
             self.cleaned_file = self.clean_file()
-            print(self.cleaned_file)
+            #print(self.cleaned_file)
         if record_id != "max":
             for record in self.cleaned_file:
                 if int(record[self.get_header_index("ID")])==int(record_id):    
@@ -121,18 +132,17 @@ class TodoFile():
             max_record_id = list(map(lambda record: 
                 int(record[self.get_header_index("ID")]),
                     self.cleaned_file))
-            print("max_rec_id: ",max_record_id)
+            #print("max_rec_id: ",max(max_record_id))
             return(int(max(max_record_id)))
 
     def close_item(self, purpose="close",record_id=False):
         '''
-            Almost works, but some index errors and list incomprehensibles
+            
         '''
         def update_that_line(index):
             self.cleaned_file[index][self.get_header_index("CompletionDate")] = \
                                                         self.current_date()
             return(self.cleaned_file[index])
-        #record = self.get_record(record_id=record_id)
         if not self.cleaned_file:
             self.cleaned_file = self.clean_file()
         for index, row in enumerate(self.cleaned_file):
@@ -141,6 +151,7 @@ class TodoFile():
                     completed on todays date? [y\\n] \n Response: " % self.cleaned_file[index])
                 if verify.lower().strip() in ["y","yes"]:
                     update_that_line(index)
+                    print("\n.\n.\n.\nItem Closed")
         self.insert_input() 
 
 
@@ -148,16 +159,5 @@ class TodoFile():
     def sort():
         '''
             Re-arrange items according to listed categories
-        '''
-        pass
-    def query():
-        '''
-            Returns record based on search term
-        '''
-        pass
-    def delete():
-        '''
-            Permanently deletes item, requires input: 
-                "delete item [index_number]" 
         '''
         pass
