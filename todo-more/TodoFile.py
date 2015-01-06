@@ -50,10 +50,9 @@ class TodoFile():
             or blank entries (based on input date, which should always exist)
         '''
         if self.has_headers:
-            loc_cleaned_file = list(filter(lambda record: 
+            self.cleaned_file = list(filter(lambda record: 
                         record[self.get_header_index("StartDate")]!="",
                             self.todo_file[1:]))
-            return(loc_cleaned_file)
         else:
             input("Can't Handle headerless data sets yet")
             exit()
@@ -85,18 +84,21 @@ class TodoFile():
 
     def new_entry(self):
         '''
-            Creates a new row entry based on user input.
+            Creates a new row entry based on user input. This method is called
+            exclusively by the run.py program.
         '''
         description, category, importance, extra_info = self.get_input()
-        self.insert_input(new_entry=True,
-                            description=description,
+        self.insert_input(description=description,
                             category=category,
                             importance=importance,
                             extra_info=extra_info)
 
     def insert_input(self, **kwargs):
+        if not self.cleaned_file:
+            self.clean_file()
         f_new = open(self.fullpath, 'w')
         f_new.write("\t".join(self.headers)+"\n")
+        print("Cleaned file! \n\n\nHere: %s" % self.cleaned_file)
         for line in self.cleaned_file:
             if "\n" not in line[-1]:
                 line[-1]+="\n"
@@ -119,7 +121,7 @@ class TodoFile():
 
     def get_record(self, record_id=False):
         if not self.cleaned_file:
-            self.cleaned_file = self.clean_file()
+            self.clean_file()
             #print(self.cleaned_file)
         if record_id != "max":
             for record in self.cleaned_file:
@@ -144,7 +146,7 @@ class TodoFile():
                                                         self.current_date()
             return(self.cleaned_file[index])
         if not self.cleaned_file:
-            self.cleaned_file = self.clean_file()
+            self.clean_file()
         for index, row in enumerate(self.cleaned_file):
             if record_id == row[self.get_header_index("ID")]:
                 verify = input("Are you sure you'd like to mark %s as \
