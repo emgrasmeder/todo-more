@@ -98,7 +98,6 @@ class TodoFile():
             self.clean_file()
         f_new = open(self.fullpath, 'w')
         f_new.write("\t".join(self.headers)+"\n")
-        print("Cleaned file! \n\n\nHere: %s" % self.cleaned_file)
         for line in self.cleaned_file:
             if "\n" not in line[-1]:
                 line[-1]+="\n"
