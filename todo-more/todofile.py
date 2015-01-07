@@ -62,22 +62,23 @@ class TodoFile():
     
     def get_input(self):
             print('''
-            The [eventual] format for adding an item:
+            To add new entry:
+
                 Importance: integer
-                StartDate: [yyyy-mm-dd]
                 Category: string
                 Description: string
                 Extra information: string
-                Solution: string (hardcoded x)
-                Completion Date
                 ******
-                Shortcuts: -r, -d, -c, -d, -e, -s
                 Default input order: Description, Category, Importance
-                Override defaults with shortcuts.''')
-            category = input("Category: ")
-            description = input("Description: ")
-            importance = input("Importance: ")
-            extra_info = input("Extra info: ")
+                Override defaults with shortcuts:
+                Shortcuts: -r, -d, -c, -d, -e, -s
+                ''')
+            default = input("Push 'Enter' to start Default Mode")
+            if default == "":
+                category = input("Category: ")
+                description = input("Description: ")
+                importance = input("Importance: ")
+                extra_info = input("Extra info: ")
 
             return(description, category, importance, extra_info)
 
@@ -138,7 +139,8 @@ class TodoFile():
 
     def close_item(self, purpose="close",record_id=False):
         '''
-            
+           Adds current date to the closed item, needs to someday accept
+           optional arguments for solution. 
         '''
         def update_that_line(index):
             self.cleaned_file[index][self.get_header_index("CompletionDate")] = \
@@ -149,7 +151,8 @@ class TodoFile():
         for index, row in enumerate(self.cleaned_file):
             if record_id == row[self.get_header_index("ID")]:
                 verify = input("Are you sure you'd like to mark %s as \
-                    completed on todays date? [y\\n] \n Response: " % self.cleaned_file[index])
+                    completed on todays date? [y\\n] \n Response: " % \
+                                                self.cleaned_file[index])
                 if verify.lower().strip() in ["y","yes"]:
                     update_that_line(index)
                     print("\n.\n.\n.\nItem Closed")

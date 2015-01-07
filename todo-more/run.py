@@ -1,6 +1,6 @@
 #run.py
-import TodoFile
-f = TodoFile.TodoFile()
+import todofile
+f = todofile.TodoFile()
 mode = input("Enter Mode: ")
 if mode =="":
     print(f.get_record(record_id="max") )
