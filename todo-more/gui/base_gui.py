@@ -16,11 +16,11 @@ class App:
         Some tasks for the future:
             - **If you kill the program without exiting out of the GUI, 
                 the GUI stays alive forever.**
-            - "Submit Button" that returns raw input to object
-                - GUI input communicates with already functional (cli) code.
-            - Add "new text field" in the same record
+            - GUI input communicates with already functional (cli) code.
+            - Add "new text field" in the same record for multiple entries in 
+                the same row
             - Default text in the input text fields (that goes away on
-                mouseclick)
+                mouseclick) (see: https://mail.python.org/pipermail/tutor/2011-August/085092.html)
             - Hide/Remove Input rows from GUI
             - GUI to display data from todo textfile
 
@@ -49,7 +49,9 @@ class App:
 
         if ttype:
             self.usertext = StringVar()
-            self.field_input = Entry(self.master, textvariable=self.usertext)
+            #self.usertext.set("Enter some input")
+            self.field_input = Entry(self.master,
+                                    textvariable=self.usertext)
             self.field_input.grid(row=self.row_count,
                                 column=self.cols[ttype][0])
             self.add_button(btype="submit") #what if it's already there?
