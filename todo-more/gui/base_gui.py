@@ -14,6 +14,8 @@ class App:
         hasn't been added yet. 
 
         Some tasks for the future:
+            - **If you kill the program without exiting out of the GUI, 
+                the GUI stays alive forever.**
             - "Submit Button" that returns raw input to object
                 - GUI input communicates with already functional (cli) code.
             - Add "new text field" in the same record
@@ -27,6 +29,7 @@ class App:
         '''
             Creates GUI with one button to get started.
         '''
+        self.outputs = False
         self.master = Tk()
         self.master.title("todo more")
         self.row_count = 0
@@ -45,10 +48,13 @@ class App:
         '''
 
         if ttype:
-            self.field_input=Entry(self.master)
+            self.usertext = StringVar()
+            self.field_input = Entry(self.master, textvariable=self.usertext)
             self.field_input.grid(row=self.row_count,
                                 column=self.cols[ttype][0])
-            self.row_count += 1 #this can be unit tested 
+            self.add_button(btype="submit") #what if it's already there?
+
+            self.row_count += 1 #this can be unit tested
 
     def add_button(self,btype=None):
         '''
@@ -68,10 +74,14 @@ class App:
         '''
             To show the developer print-function feedback about what is
             being ouput from text fields, and to send data to "to do.txt"
+
+            Known Issues:
+                - self.usertext.get() only looks at the most recently created
+                    text field. Each usertext instance needs to be unique,
+                    stored either in a dict or a list.
         '''
 
-        if entry:
-            print("Your input, '%s,' was [not] saved to your todo file" %
-                entry)
+        print("Your input was, '%s,' and someday we'll save it to a file." %
+                self.usertext.get())
 
 App()

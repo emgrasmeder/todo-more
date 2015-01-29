@@ -56,9 +56,9 @@ class TodoFile():
         else:
             input("Can't Handle headerless data sets yet")
             exit()
-            return(list(filter(lambda record: 
-                        record[self.get_header_index("StartDate")]!="",
-                            self.todo_file)))
+            #return(list(filter(lambda record: 
+            #            record[self.get_header_index("StartDate")]!="",
+            #                self.todo_file)))
     
     def get_input(self):
             print('''
