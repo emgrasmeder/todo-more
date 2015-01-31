@@ -9,20 +9,19 @@ class App:
         creates a pop up GUI, which will eventually be how the user interacts
         with todo-more. 
 
-        Right now the GUI has a button that adds new text fields, which 
-        actually send input back to the class object, but the retrieve button
-        hasn't been added yet. 
+        Right now the GUI has a button that adds new text fields, which sends
+        input back to the class object
 
         Some tasks for the future:
-            - **If you kill the program without exiting out of the GUI, 
-                the GUI stays alive forever.**
+            - Fix issue when you kill the program without exiting out of the
+                GUI, but GUI stays alive forever.
             - GUI input communicates with already functional (cli) code.
             - Add "new text field" in the same record for multiple entries in 
                 the same row
             - Default text in the input text fields (that goes away on
                 mouseclick) (see: https://mail.python.org/pipermail/tutor/2011-August/085092.html)
             - Hide/Remove Input rows from GUI
-            - GUI to display data from todo textfile
+            - GUI to display data already existent in the todo textfile
 
     '''
     def __init__(self):
@@ -30,6 +29,7 @@ class App:
             Creates GUI with one button to get started.
         '''
         self.outputs = False
+        self.usertext_list = []
         self.master = Tk()
         self.master.title("todo more")
         self.row_count = 0
@@ -41,22 +41,6 @@ class App:
         self.add_button(btype="add_new")
 
         self.master.mainloop()
-
-    def add_fields(self, ttype="text_field"):
-        '''
-            Adds next text field, ready for input.
-        '''
-
-        if ttype:
-            self.usertext = StringVar()
-            #self.usertext.set("Enter some input")
-            self.field_input = Entry(self.master,
-                                    textvariable=self.usertext)
-            self.field_input.grid(row=self.row_count,
-                                column=self.cols[ttype][0])
-            self.add_button(btype="submit") #what if it's already there?
-
-            self.row_count += 1 #this can be unit tested
 
     def add_button(self,btype=None):
         '''
@@ -72,6 +56,22 @@ class App:
                                                 self.cols[btype][0])
 
 
+    def add_fields(self, ftype="text_field"):
+        '''
+            Adds next text field, ready for input.
+        '''
+
+        if ftype:
+            self.usertext_list.append(StringVar())
+            #self.usertext.set("Enter some input")
+            self.field_input = Entry(self.master,
+                                    textvariable=self.usertext_list[-1])
+            self.field_input.grid(row=self.row_count,
+                                column=self.cols[ftype][0])
+            self.add_button(btype="submit") #what if it's already there?
+
+            self.row_count += 1 #this can be unit tested
+
     def submit_entry(self, entry=None):
         '''
             To show the developer print-function feedback about what is
@@ -84,6 +84,6 @@ class App:
         '''
 
         print("Your input was, '%s,' and someday we'll save it to a file." %
-                self.usertext.get())
+                [ut.get() for ut in self.usertext_list])
 
 App()
